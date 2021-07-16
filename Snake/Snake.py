@@ -15,7 +15,7 @@ length = 1
 snake = [(x, y)]
 dx = 0
 dy = 0
-fps = 10
+fps = 5
 score = 0
 
 sc = pygame.display.set_mode([width, height])
