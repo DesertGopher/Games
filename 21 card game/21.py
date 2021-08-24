@@ -253,9 +253,9 @@ def show_cards():
         player_cards.append(6)
 
     player_count = int(sum(player_cards))
-    form.label_9.setText("Счет: " + str(player_count))
+    form.label_9.setText("Очки: " + str(player_count))
     computer_count = int(random.uniform(16, 24))
-    form.label_10.setText("Счет: " + str(computer_count))
+    form.label_10.setText("Очки: " + str(computer_count))
 
     if player_count < 22 and computer_count < 22:
         if player_count > computer_count:
