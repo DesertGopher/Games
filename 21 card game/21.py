@@ -19,13 +19,60 @@ player_cards = []
 computer_cards = []
 player_count = 0
 computer_count = 0
-
+computer_points = int(0)
+player_points = int(0)
 
 def rules():
     window2.show()
 
 
 def new_game():
+    global player_points
+    global computer_points
+    computer_points = int(0)
+    player_points = int(0)
+    form.Player_count.setText(str(player_points))
+    form.Computer_count.setText(str(player_points))
+    form.rules.setDisabled(False)
+    form.take_card.setDisabled(False)
+    form.show_cards.setDisabled(False)
+    form.next.setDisabled(True)
+    global cards
+    cards = ['Туз♢', '6♢', '7♢', '8♢', '9♢', '10♢', 'Валет♢', 'Дама♢', 'Король♢',
+             'Туз♥', '6♥', '7♥', '8♥', '9♥', '10♥', 'Валет♥', 'Дама♥', 'Король♥',
+             'Туз♤', '6♤', '7♤', '8♤', '9♤', '10♤', 'Валет♤', 'Дама♤', 'Король♤',
+             'Туз♧', '6♧', '7♧', '8♧', '9♧', '10♧', 'Валет♧', 'Дама♧', 'Король♧']
+
+    global player_cards
+    player_cards = []
+    global computer_cards
+    computer_cards = []
+
+    n = random.choice(cards)
+    player_cards.append(n)
+    cards.remove(n)
+    n = random.choice(cards)
+    player_cards.append(n)
+    cards.remove(n)
+
+    n = random.choice(cards)
+    computer_cards.append(n)
+    cards.remove(n)
+    n = random.choice(cards)
+    computer_cards.append(n)
+    cards.remove(n)
+
+    cards_str = str(player_cards)
+    cards_str1 = cards_str.replace("'", "")
+    cards_str2 = cards_str1.replace("]", "")
+    cards_str3 = cards_str2.replace("[", "")
+    print(cards_str3)
+    form.label_3.setText(str(cards_str3))
+    form.label_7.setText('')
+    form.label_9.setText('')
+    form.label_10.setText('')
+
+def next():
     form.rules.setDisabled(False)
     form.take_card.setDisabled(False)
     form.show_cards.setDisabled(False)
@@ -83,11 +130,6 @@ def take_card():
     form.label_3.setText(str(cards_str3))
     if len(player_cards) == 5:
         form.take_card.setEnabled(False)
-
-
-computer_points = int(0)
-player_points = int(0)
-
 
 def show_cards():
     global player_points
@@ -253,7 +295,7 @@ form.rules.setDisabled(True)
 form.take_card.setDisabled(True)
 form.show_cards.setDisabled(True)
 form.action.triggered.connect(new_game)
-form.next.clicked.connect(new_game)
+form.next.clicked.connect(next)
 form.take_card.clicked.connect(take_card)
 form.show_cards.clicked.connect(show_cards)
 app.exec_()
