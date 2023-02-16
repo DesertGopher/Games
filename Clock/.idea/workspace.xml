@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc530eaa-4244-4cde-afb2-444c30df6244" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Games pictures/21 card game.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Games pictures/Snake.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Games pictures/Snake3D.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Games pictures/Tic-Tak-ToE.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Matrix/Matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Matrix/Matrix.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,8 +29,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="restartRequiresConfirmation" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../ENDI/IWater/iwaterapi_test_development_repo" />
   </component>
   <component name="RunManager">
     <configuration name="Clock" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -107,6 +102,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

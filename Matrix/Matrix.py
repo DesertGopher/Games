@@ -19,7 +19,7 @@ class Symbol:
 
 class Column:
     def __init__(self, x, y):
-        self.column_height = randrange(8, 25)
+        self.column_height = randrange(15, 25)
         self.speed = randrange(4, 6)
         self.symbols = [Symbol(x, i, self.speed) for i in range(y, y - font_size * self.column_height, - font_size)]
 
@@ -28,8 +28,8 @@ class Column:
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 width = 800
-height = 600
-font_size = 20
+height = 500
+font_size = 15
 alpha = 1200
 
 pg.init()
