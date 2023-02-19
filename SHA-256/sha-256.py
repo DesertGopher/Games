@@ -29,19 +29,30 @@ K = [
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 ]
 
+# Setting Initial Hash Value
+h = [
+    0x6a09e667,
+    0xbb67ae85,
+    0x3c6ef372,
+    0xa54ff53a,
+    0x9b05688c,
+    0x510e527f,
+    0x1f83d9ab,
+    0x5be0cd19
+]
+
 
 def generate_hash() -> bytearray:
 
     message = input(str("Phrase to hash: "))
     message = bytearray(message, 'ascii')
-
-    # Padding
-    length = len(message) * 8 # len(message) is number of BYTES!!!
+    print(message)
+    length = len(message) * 8
     message.append(0x80)
     while (len(message) * 8 + 64) % 512 != 0:
         message.append(0x00)
 
-    message += length.to_bytes(8, 'big') # pad to 8 bytes or 64 bits
+    message += length.to_bytes(8, 'big')  # pad to 8 bytes or 64 bits
 
     assert (len(message) * 8) % 512 == 0, "Padding did not complete properly!"
 
@@ -94,8 +105,11 @@ def generate_hash() -> bytearray:
 
         # Iterate for t=0 to 63
         for t in range(64):
-            t1 = ((h + _capsigma1(e) + _ch(e, f, g) + K[t] +
-                   int.from_bytes(message_schedule[t], 'big')) % 2**32)
+            t1 = (
+                    (h + _capsigma1(e) + _ch(e, f, g) + K[t] +
+                     int.from_bytes(message_schedule[t], 'big')
+                     ) % 2**32
+            )
 
             t2 = (_capsigma0(a) + _maj(a, b, c)) % 2**32
 
