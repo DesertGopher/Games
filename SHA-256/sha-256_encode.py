@@ -1,6 +1,8 @@
 import hashlib
-from rich.console import Console
+import operator
 import re
+
+from rich.console import Console
 import modules
 
 console = Console(highlight=False, color_system="windows")
@@ -62,13 +64,44 @@ def encode(phrase):
     for i in range(48):
         for j in range(32):
             text = text + "0"
-    modules.sixth_step(sub_text)
+    modules.sixth_step_output(sub_text)
+    text_block = modules.sixth_step(text)
 
-    # 2.3.
-    For i from w [16…63]:
-        s0 = (w[i - 15] rightrotate 7) xor(w[i - 15] rightrotate 18) xor(w[i - 15] righthift 3)
-        s1 = (w[i - 2] rightrotate 17) xor(w[i - 2] rightrotate 19) xor(w[i - 2] righthift 10)
-        w[i] = w[i - 16] + s0 + w[i - 7] + s1
+    # 2.3.1. Инициализируем 8 значений хеша
+
+    h0 = 0x6a09e667
+    h1 = 0xbb67ae85
+    h2 = 0x3c6ef372
+    h3 = 0xa54ff53a
+    h5 = 0x9b05688c
+    h4 = 0x510e527f
+    h6 = 0x1f83d9ab
+    h7 = 0x5be0cd19
+
+    words = []
+    for i in range(64):
+        words.append(re.compile(r'\w+').findall(text_block)[i])
+
+    # 2.3.2. Изменяем нулевые индексы в конце массива, используя следующий алгоритм
+
+    for i in range(16, 64):
+
+        s01 = str(modules.rotate_right(str(words[i-15]), 7))
+        s02 = str(modules.rotate_right(str(words[i-15]), 18))
+        s03 = str(modules.shift_right(str(words[i-15]), 3))
+
+        s0 = modules.operate_xor(s01, s02, s03)
+
+        s11 = str(modules.rotate_right(str(words[i-2]), 17))
+        s12 = str(modules.rotate_right(str(words[i-2]), 19))
+        s13 = str(modules.shift_right(str(words[i-2]), 10))
+
+        s1 = modules.operate_xor(s11, s12, s13)
+        words[i] = modules.bin_add(modules.bin_add(str(words[i-16]), str(s0)),
+                                   modules.bin_add(str(words[i-7]), str(s1)))
+        if len(words[i]) > 32:
+            words[i] = words[i][len(words[i])-32:len(words[i])]
+
     return 'str(text)'
 
 

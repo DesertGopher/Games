@@ -1,4 +1,5 @@
 from rich.console import Console
+from itertools import zip_longest
 
 console = Console(highlight=False, color_system="windows")
 
@@ -105,10 +106,58 @@ def fifth_step(text):
     console.print(str("[blue]" + get_32_mass(get_string_32(text))))
 
 
-def sixth_step(text):
+def sixth_step_output(text):
     console.print(str("[green]2.2. Добавляем ещё 48 слов, инициализированных нулями, чтобы получить массив w[0…63]"))
     console.print(str("[blue]" + get_32_mass(get_string_32(text)) + "----------"))
     console.print(str("[blue]00000000000000000000000000000000 00000000000000000000000000000000\n"
                       "00000000000000000000000000000000 00000000000000000000000000000000"))
 
 
+def sixth_step(text):
+    return get_32_mass(get_string_32(text))
+
+
+def rotate_right(block, d):
+    start = block[0: len(block)-d]
+    end = block[len(block)-d:]
+    return str(str(end) + str(start))
+
+
+def shift_right(block, d):
+    start = block[0: len(block)-d]
+    end = ''
+    for i in range(d):
+        end += '0'
+    return str(str(end) + str(start))
+
+
+def bin_add(b1, b2):
+    p = 0
+    r = ''
+    for i, j in zip_longest(b1[::-1], b2[::-1], fillvalue='0'):
+        p, d = divmod(int(i) + int(j) + p, 2)
+        r = str(d) + r
+    if p:
+        r = str(p) + r
+    return r
+
+
+def operate_xor(s01, s02, s03):
+    a = 1
+
+    st01 = []
+    st02 = []
+    st03 = []
+    for i in range(0, len(s01), a):
+        st01.append(int(s01[i: i + a]))
+    for i in range(0, len(s02), a):
+        st02.append(int(s02[i: i + a]))
+    for i in range(0, len(s03), a):
+        st03.append(int(s03[i: i + a]))
+
+    st = ''
+
+    for i in range(32):
+        st += str(int(st01[i]) ^ int(st02[i]) ^ int(st03[i]))
+
+    return st
