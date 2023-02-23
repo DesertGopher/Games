@@ -67,17 +67,7 @@ def encode(phrase):
     modules.sixth_step_output(sub_text)
     text_block = modules.sixth_step(text)
 
-    # Инициализируем 8 значений хеша
-
-    h0 = 0x6a09e667
-    h1 = 0xbb67ae85
-    h2 = 0x3c6ef372
-    h3 = 0xa54ff53a
-    h5 = 0x9b05688c
-    h4 = 0x510e527f
-    h6 = 0x1f83d9ab
-    h7 = 0x5be0cd19
-
+    # Переводим строку в массив из 32-х битных слов
     words = []
     for i in range(64):
         words.append(re.compile(r'\w+').findall(text_block)[i])
@@ -85,7 +75,6 @@ def encode(phrase):
     # 2.3. Изменяем нулевые индексы в конце массива, используя следующий алгоритм
 
     for i in range(16, 64):
-
         s01 = str(modules.rotate_right(str(words[i-15]), 7))
         s02 = str(modules.rotate_right(str(words[i-15]), 18))
         s03 = str(modules.shift_right(str(words[i-15]), 3))
@@ -101,11 +90,77 @@ def encode(phrase):
                                    modules.bin_add(str(words[i-7]), str(s1)))
         if len(words[i]) > 32:
             words[i] = words[i][len(words[i])-32:len(words[i])]
-
     modules.seventh_step(words)
 
+    # Инициализируем 8 значений хеша
+    h0 = 0x6a09e667
+    h1 = 0xbb67ae85
+    h2 = 0x3c6ef372
+    h3 = 0xa54ff53a
+    h5 = 0x9b05688c
+    h4 = 0x510e527f
+    h6 = 0x1f83d9ab
+    h7 = 0x5be0cd19
+
+    print(bin(h0))
+
+    # Инициализируем рабочие переменные
+    a = modules.shorten_31(modules.to_bin(h0))
+    b = modules.shorten_31(modules.to_bin(h1))
+    c = modules.shorten_31(modules.to_bin(h2))
+    d = modules.shorten_31(modules.to_bin(h3))
+    e = modules.shorten_31(modules.to_bin(h4))
+    f = modules.shorten_31(modules.to_bin(h5))
+    g = modules.shorten_31(modules.to_bin(h6))
+    h = modules.shorten_31(modules.to_bin(h7))
+
+    # 3.1. Запустим цикл сжатия, который будет изменять значения a…h
+
+    for i in range(64):
+        s11 = modules.rotate_right(str(e), 6)
+        s12 = modules.rotate_right(str(e), 11)
+        s13 = modules.rotate_right(str(e), 25)
+
+        s1 = modules.operate_xor(s11, s12, s13)
+        e_and_f = modules.operate_and(e, f)
+        not_e = modules.operate_not(e)
+        not_e_and_g = modules.operate_and(not_e, g)
+        ch = modules.operate_xor_2(e_and_f, not_e_and_g)
+
+        temp1 = modules.len_shorten(modules.bin_add(
+            modules.bin_add(
+                modules.bin_add(h, s1), ch
+            ),
+            modules.bin_add(modules.to_bin(K[i]), words[i])
+        ))
+
+        s01 = modules.rotate_right(str(a), 2)
+        s02 = modules.rotate_right(str(a), 13)
+        s03 = modules.rotate_right(str(a), 22)
+        s0 = modules.operate_xor(s01, s02, s03)
+
+        a_and_b = modules.operate_and(a, b)
+        a_and_c = modules.operate_and(a, c)
+        b_and_c = modules.operate_and(b, c)
+        maj = modules.operate_xor(a_and_b, a_and_c, b_and_c)
+
+        temp2 = modules.len_shorten(modules.bin_add(s0, maj))
+
+        h = g
+        g = f
+        f = e
+        e = modules.len_shorten(modules.bin_add(d, temp1))
+        d = c
+        c = b
+        b = a
+        a = modules.len_shorten(modules.bin_add(temp1, temp2))
+
+    h0 = modules.bin_add(str(h0), str(a))
+    print(h0)
 
 
+
+    print('\n\n')
     return 'str(text)'
 
 

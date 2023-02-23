@@ -1,3 +1,5 @@
+import re
+
 from rich.console import Console
 from itertools import zip_longest
 
@@ -148,6 +150,15 @@ def operate_xor(s01, s02, s03):
     st01 = []
     st02 = []
     st03 = []
+
+    if len(s01) != len(s02) != len(s03):
+        s01 = len_lengthen(s01)
+        s02 = len_lengthen(s02)
+        s03 = len_lengthen(s03)
+        s01 = len_shorten(s01)
+        s02 = len_shorten(s02)
+        s03 = len_shorten(s03)
+
     for i in range(0, len(s01), a):
         st01.append(int(s01[i: i + a]))
     for i in range(0, len(s02), a):
@@ -159,6 +170,24 @@ def operate_xor(s01, s02, s03):
 
     for i in range(32):
         st += str(int(st01[i]) ^ int(st02[i]) ^ int(st03[i]))
+
+    return st
+
+
+def operate_xor_2(s01, s02):
+    a = 1
+
+    st01 = []
+    st02 = []
+    for i in range(0, len(s01), a):
+        st01.append(int(s01[i: i + a]))
+    for i in range(0, len(s02), a):
+        st02.append(int(s02[i: i + a]))
+
+    st = ''
+
+    for i in range(32):
+        st += str(int(st01[i]) ^ int(st02[i]))
 
     return st
 
@@ -176,3 +205,80 @@ def seventh_step(words):
     console.print("\n\n[green]2.3. Изменяем нулевые индексы в конце массива, используя алгоритм со сдвигом вправо \n"
                   "Это оставляет нам 64 слова в нашей очереди сообщений")
     console.print(out)
+
+
+def operate_and(s01, s02):
+    a = 1
+
+    st01 = []
+    st02 = []
+
+    if len(s01) != len(s02):
+        s01 = len_lengthen(s01)
+        s02 = len_lengthen(s02)
+        s01 = len_shorten(s01)
+        s02 = len_shorten(s02)
+    for i in range(0, len(s01), a):
+        st01.append(int(s01[i: i + a]))
+    for i in range(0, len(s02), a):
+        st02.append(int(s02[i: i + a]))
+
+    st = ''
+
+    for i in range(32):
+        if st01[i] == 1 and st02[i] == 1:
+            st += '1'
+        else:
+            st += '0'
+    return st
+
+
+def operate_not(s01):
+    a = 1
+
+    st01 = []
+    for i in range(0, len(s01), a):
+        st01.append(int(s01[i: i + a]))
+
+    st = ''
+
+    for i in range(32):
+        if st01[i] == 1:
+            st += '0'
+        else:
+            st += '1'
+    return st
+
+
+def to_bin(h):
+    word = str(bin(h))
+    word = re.sub('b', '', word)
+    len_shorten(word)
+    len_lengthen(word)
+    return str(word)
+
+
+def to_bin_k(h):
+    word = str(bin(h))
+    word = re.sub('b', '', word)
+    len_shorten(word)
+    return str(word)
+
+
+def len_shorten(word):
+    if len(word) > 32:
+        word = word[len(word) - 32:len(word)]
+    return str(word)
+
+
+def len_lengthen(word):
+    if len(word) <= 32:
+        while len(word) != 32:
+            word = '0' + word
+    return word
+
+
+def shorten_31(word):
+    if len(word) > 31:
+        word = word[1:]
+    return word
