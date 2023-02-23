@@ -1,3 +1,6 @@
 .idea/
 tic-tac-toe/.idea/vcs.xml
 /SHA-256/.venv/
+SHA-256/__pycache__/
+SHA-256/__pycache__/modules.cpython-38.pyc
+*.pyc

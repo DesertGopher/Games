@@ -67,7 +67,7 @@ def encode(phrase):
     modules.sixth_step_output(sub_text)
     text_block = modules.sixth_step(text)
 
-    # 2.3.1. Инициализируем 8 значений хеша
+    # Инициализируем 8 значений хеша
 
     h0 = 0x6a09e667
     h1 = 0xbb67ae85
@@ -82,7 +82,7 @@ def encode(phrase):
     for i in range(64):
         words.append(re.compile(r'\w+').findall(text_block)[i])
 
-    # 2.3.2. Изменяем нулевые индексы в конце массива, используя следующий алгоритм
+    # 2.3. Изменяем нулевые индексы в конце массива, используя следующий алгоритм
 
     for i in range(16, 64):
 
@@ -101,6 +101,10 @@ def encode(phrase):
                                    modules.bin_add(str(words[i-7]), str(s1)))
         if len(words[i]) > 32:
             words[i] = words[i][len(words[i])-32:len(words[i])]
+
+    modules.seventh_step(words)
+
+
 
     return 'str(text)'
 

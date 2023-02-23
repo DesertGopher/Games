@@ -161,3 +161,18 @@ def operate_xor(s01, s02, s03):
         st += str(int(st01[i]) ^ int(st02[i]) ^ int(st03[i]))
 
     return st
+
+
+def seventh_step(words):
+    out = ''
+    i = 1
+    for word in words:
+        i += 1
+        if word.startswith('1'):
+            out += str("[magenta]" + str(word) + " " if i % 2 == 0 else "[magenta]" + str(word) + "\n")
+        else:
+            out += str("[blue]" + str(word) + " " if i % 2 == 0 else "[blue]" + str(word) + "\n")
+
+    console.print("\n\n[green]2.3. Изменяем нулевые индексы в конце массива, используя алгоритм со сдвигом вправо \n"
+                  "Это оставляет нам 64 слова в нашей очереди сообщений")
+    console.print(out)
