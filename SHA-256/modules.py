@@ -151,14 +151,6 @@ def operate_xor(s01, s02, s03):
     st02 = []
     st03 = []
 
-    if len(s01) != len(s02) != len(s03):
-        s01 = len_lengthen(s01)
-        s02 = len_lengthen(s02)
-        s03 = len_lengthen(s03)
-        s01 = len_shorten(s01)
-        s02 = len_shorten(s02)
-        s03 = len_shorten(s03)
-
     for i in range(0, len(s01), a):
         st01.append(int(s01[i: i + a]))
     for i in range(0, len(s02), a):
@@ -213,11 +205,6 @@ def operate_and(s01, s02):
     st01 = []
     st02 = []
 
-    if len(s01) != len(s02):
-        s01 = len_lengthen(s01)
-        s02 = len_lengthen(s02)
-        s01 = len_shorten(s01)
-        s02 = len_shorten(s02)
     for i in range(0, len(s01), a):
         st01.append(int(s01[i: i + a]))
     for i in range(0, len(s02), a):
@@ -278,7 +265,13 @@ def len_lengthen(word):
     return word
 
 
-def shorten_31(word):
-    if len(word) > 31:
-        word = word[1:]
+def shorten_32(word):
+    if len(word) < 32:
+        while len(word) != 32:
+            word = '0' + word
+    elif len(word) > 32:
+        while len(word) != 32:
+            word = word[1:]
+    else:
+        return word
     return word

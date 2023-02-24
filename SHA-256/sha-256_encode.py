@@ -1,5 +1,4 @@
 import hashlib
-import operator
 import re
 
 from rich.console import Console
@@ -18,19 +17,8 @@ K = [
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 ]
 
-h = [
-    0x6a09e667,
-    0xbb67ae85,
-    0x3c6ef372,
-    0xa54ff53a,
-    0x9b05688c,
-    0x510e527f,
-    0x1f83d9ab,
-    0x5be0cd19
-]
 
-
-def encode(phrase):
+def custom_encode(phrase):
     """Метод с рукописной кодировкой SHA-256"""
 
     # 1.1. Переводим строку в двоичный код
@@ -102,36 +90,37 @@ def encode(phrase):
     h6 = 0x1f83d9ab
     h7 = 0x5be0cd19
 
-    print(bin(h0))
-
     # Инициализируем рабочие переменные
-    a = modules.shorten_31(modules.to_bin(h0))
-    b = modules.shorten_31(modules.to_bin(h1))
-    c = modules.shorten_31(modules.to_bin(h2))
-    d = modules.shorten_31(modules.to_bin(h3))
-    e = modules.shorten_31(modules.to_bin(h4))
-    f = modules.shorten_31(modules.to_bin(h5))
-    g = modules.shorten_31(modules.to_bin(h6))
-    h = modules.shorten_31(modules.to_bin(h7))
+    a = modules.shorten_32(modules.to_bin(h0))
+    b = modules.shorten_32(modules.to_bin(h1))
+    c = modules.shorten_32(modules.to_bin(h2))
+    d = modules.shorten_32(modules.to_bin(h3))
+    e = modules.shorten_32(modules.to_bin(h4))
+    f = modules.shorten_32(modules.to_bin(h5))
+    g = modules.shorten_32(modules.to_bin(h6))
+    h = modules.shorten_32(modules.to_bin(h7))
 
     # 3.1. Запустим цикл сжатия, который будет изменять значения a…h
 
     for i in range(64):
+
         s11 = modules.rotate_right(str(e), 6)
         s12 = modules.rotate_right(str(e), 11)
         s13 = modules.rotate_right(str(e), 25)
 
         s1 = modules.operate_xor(s11, s12, s13)
+
         e_and_f = modules.operate_and(e, f)
         not_e = modules.operate_not(e)
         not_e_and_g = modules.operate_and(not_e, g)
         ch = modules.operate_xor_2(e_and_f, not_e_and_g)
 
-        temp1 = modules.len_shorten(modules.bin_add(
+        temp1 = modules.len_shorten(
             modules.bin_add(
-                modules.bin_add(h, s1), ch
-            ),
-            modules.bin_add(modules.to_bin(K[i]), words[i])
+                modules.bin_add(
+                    modules.bin_add(h, s1), ch
+                ),
+                modules.bin_add(modules.to_bin(K[i]), words[i])
         ))
 
         s01 = modules.rotate_right(str(a), 2)
@@ -146,6 +135,16 @@ def encode(phrase):
 
         temp2 = modules.len_shorten(modules.bin_add(s0, maj))
 
+        if i == 0:
+            h0 = a
+            h1 = b
+            h2 = c
+            h3 = d
+            h4 = e
+            h5 = f
+            h6 = g
+            h7 = h
+
         h = g
         g = f
         f = e
@@ -155,13 +154,30 @@ def encode(phrase):
         b = a
         a = modules.len_shorten(modules.bin_add(temp1, temp2))
 
-    h0 = modules.bin_add(str(h0), str(a))
-    print(h0)
+    a = '0' + a
+    b = '0' + b
+    c = '0' + c
+    d = '0' + d
+    e = '0' + e
+    f = '0' + f
+    g = '0' + g
+    h = '0' + h
 
+    h0 = modules.shorten_32(modules.bin_add(h0, a))
+    h1 = modules.shorten_32(modules.bin_add(h1, b))
+    h2 = modules.shorten_32(modules.bin_add(h2, c))
+    h3 = modules.shorten_32(modules.bin_add(h3, d))
+    h4 = modules.shorten_32(modules.bin_add(h4, e))
+    h5 = modules.shorten_32(modules.bin_add(h5, f))
+    h6 = modules.shorten_32(modules.bin_add(h6, g))
+    h7 = modules.shorten_32(modules.bin_add(h7, h))
 
+    result = str(hex(int(h0, 2))[2:]) + str(hex(int(h1, 2))[2:]) + \
+             str(hex(int(h2, 2))[2:]) + str(hex(int(h3, 2))[2:]) + \
+             str(hex(int(h4, 2))[2:]) + str(hex(int(h5, 2))[2:]) + \
+             str(hex(int(h6, 2))[2:]) + str(hex(int(h7, 2))[2:])
 
-    print('\n\n')
-    return 'str(text)'
+    return result
 
 
 def encode_lib(phrase):
@@ -171,5 +187,5 @@ def encode_lib(phrase):
 
 if __name__ == "__main__":
     message = input(str("Phrase to hash: "))
-    console.print("[green]Custom SHA-256    : " + "[red]" + encode(message))
+    console.print("[green]Custom SHA-256    : " + "[red]" + custom_encode(message))
     console.print('[green]SHA-256 encoding  : ' + "[red]" + encode_lib(message))
