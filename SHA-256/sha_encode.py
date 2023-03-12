@@ -23,17 +23,14 @@ def custom_encode(phrase):
 
     # 1.1. Переводим строку в двоичный код
     text = ''.join(format(x, '08b') for x in bytearray(phrase, 'utf-8'))
-    # modules.first_step(text)
 
     # 1.2. Добавляем в конец одну единицу
     text = str(text + "1")
-    # modules.second_step(text)
 
     # 1.3. Добавляем нули, чтобы длина стала кратна 512 без последних 64 символов
     while len(text) % 512 != 0:
         text = str(text + "0")
     text = text[:-64]
-    # modules.third_step(text)
 
     # 1.4. Находим длину входных данных в двоичном коде и добавляем в конец в виде 64 битов
     sf_byte_num = bin(len(''.join(format(x, '08b') for x in bytearray(phrase, 'utf-8'))))[2:]
@@ -42,17 +39,14 @@ def custom_encode(phrase):
         while len(sf_byte_num_code) < 64:
             sf_byte_num_code = str("0" + sf_byte_num_code)
     text = str(text + sf_byte_num_code)
-    # modules.forth_step(text, sf_byte_num)
 
     # 2.1. Делим входные данные на 32-битные слова (повторять для каждого 512-битного куска
-    # modules.fifth_step(text)
     sub_text = text
 
     # 2.2. Добавляем еще 48 слов их нулей, чтобы было кратно 64
     for i in range(48):
         for j in range(32):
             text = text + "0"
-    # modules.sixth_step_output(sub_text)
     text_block = modules.sixth_step(text)
 
     # Переводим строку в массив из 32-х битных слов
@@ -61,7 +55,6 @@ def custom_encode(phrase):
         words.append(re.compile(r'\w+').findall(text_block)[i])
 
     # 2.3. Изменяем нулевые индексы в конце массива, используя следующий алгоритм
-
     for i in range(16, 64):
         s01 = str(modules.rotate_right(str(words[i-15]), 7))
         s02 = str(modules.rotate_right(str(words[i-15]), 18))
@@ -78,8 +71,6 @@ def custom_encode(phrase):
                                    modules.bin_add(str(words[i-7]), str(s1)))
         if len(words[i]) > 32:
             words[i] = words[i][len(words[i])-32:len(words[i])]
-    # modules.seventh_step(words)
-    # modules.progress_display(40)
 
     # Инициализируем 8 значений хеша
     h0 = 0x6a09e667
@@ -90,8 +81,6 @@ def custom_encode(phrase):
     h4 = 0x510e527f
     h6 = 0x1f83d9ab
     h7 = 0x5be0cd19
-    # modules.eighth_step()
-    # modules.progress_display(40)
 
     # Инициализируем рабочие переменные
     a = modules.shorten_32(modules.to_bin(h0))
@@ -104,7 +93,6 @@ def custom_encode(phrase):
     h = modules.shorten_32(modules.to_bin(h7))
 
     # 3.1. Запустим цикл сжатия, который будет изменять значения a…h
-
     for i in range(64):
 
         s11 = modules.rotate_right(str(e), 6)
@@ -164,8 +152,6 @@ def custom_encode(phrase):
     f = '0' + f
     g = '0' + g
     h = '0' + h
-    # modules.ninth_step(a, b, c, d, e, f, g, h, h0, h1, h2, h3, h4, h5, h6, h7)
-    # modules.progress_display(40)
 
     h0 = modules.shorten_32(modules.bin_add(h0, a))
     h1 = modules.shorten_32(modules.bin_add(h1, b))
@@ -178,8 +164,6 @@ def custom_encode(phrase):
 
     result = str(hex(int(h0, 2))[2:]) + str(hex(int(h1, 2))[2:]) + str(hex(int(h2, 2))[2:]) + str(hex(int(h3, 2))[2:]) + \
              str(hex(int(h4, 2))[2:]) + str(hex(int(h5, 2))[2:]) + str(hex(int(h6, 2))[2:]) + str(hex(int(h7, 2))[2:])
-    # console.print("[green]3.3. Складываем значения a..h и h0...h7 друг с другом и, "
-    #               "совмещая в строку, получим результат.")
     return result
 
 
@@ -188,7 +172,6 @@ def encode_lib(phrase):
     return hashlib.sha256(phrase.encode('utf-8')).hexdigest()
 
 
-if __name__ == "__main__":
-    message = input(str("Phrase to hash: "))
-    console.print("[green]Custom SHA-256    : " + "[red]" + custom_encode(message))
-    console.print('[green]SHA-256 encoding  : ' + "[red]" + encode_lib(message))
+# message = input(str("Phrase to hash: "))
+# console.print("Custom SHA-256    : " + custom_encode(message))
+# console.print("SHA-256 encoding  : " + encode_lib(message))
