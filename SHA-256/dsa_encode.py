@@ -11,29 +11,42 @@ def dsa(phrase):
         q += "0"
     q = int(q, 2)
     p = int(q) + 1
+    # print(q)
 
     g = 4
     x = 10  # секретный ключ
     k = 5
 
     # Для проверки
-    # q = 11
-    # p = 23
-    # hash_len = 9
-    # x = 7
-    # k = 3
+    q = 11
+    p = 23
+    hash_len = 9
+    x = 7
+    k = 3
 
     y = pow(g, x) % p  # открытый ключ
-    r = (pow(g, k) % p) % int(q)
-    s = (euclid_ext(k, q)[1] * (hash_len + x * r)) % q
+    print(f'y = {y}')
 
+    r = (pow(g, k) % p) % int(q)
+    print(f'r = {r}')
+
+    s = (euclid_ext(k, q)[1] * (hash_len + x * r)) % q
+    print(f's = {s}')
+
+    # проверка
     w = euclid_ext(s, q)[1]
+    print(f'w = {w}')
+
     u1 = hash_len * w % q
+    print(f'u1 = {u1}')
+
     u2 = r * w % q
+    print(f'u2 = {u2}')
+
     v = (pow(g, u1) * pow(y, u2) % p) % q
 
-    print(f'Хэш : {custom_encode(phrase)}')
-    print(f'Подпись : ({r}, {s})')
+    print(f'             Хэш : {custom_encode(phrase)}')
+    print(f'         Подпись : ({r}, {s})')
     print(f'Проверка подписи : v = {v}')
     if v == r:
         print('                   v = r ---> Подпись верна')
